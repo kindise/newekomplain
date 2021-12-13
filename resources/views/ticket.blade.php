@@ -31,7 +31,7 @@
                             <th scope="col">Nama Pengkomplain</th>
                             <th scope="col">Bagian / Unit</th>
                             <th scope="col">Deskripsi</th>
-			    <th scope="col">PIC</th>
+			                <th scope="col">PIC</th>
                             <th scope="col">Status</th>
                             <th scope="col" colspan="2">Action</th>
                         </tr>
@@ -42,7 +42,7 @@
                                 <th scope="row">{{ $obj->nama }}</th>
                                 <td>{{ $obj->cnmunit }}</td>
                                 <td>{{ $obj->description }}</td>
-      				<td>{{ $obj->pic }}</td>
+      				            <td>{{ $obj->pic }}</td>
                                 @if($obj->status_name ==  'Open')
                                     <td style="width: 0.1rem;"><span class="badge bg-danger">{{ $obj->status_name }}</span></td>
                                     <td  style="width: 0.1rem;"><button class="btn btn-lg btn-image btn-take" name="{{ $obj->id }}" onclick="confirm_take(this.name);"></button></td>

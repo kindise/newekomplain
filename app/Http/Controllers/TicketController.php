@@ -63,7 +63,8 @@ class TicketController extends Controller
             $ticket->nama = $request->nama;
             $ticket->ckdunit = $request->unit;
             $ticket->description = $request->deskripsi;
-            $ticket->pic =  Auth::user()->name;
+            //Auth::user()->name
+            $ticket->pic = 'SIMRS Pasar Rebo' ;     
             $ticket->save();
 
             if ($ticket){
