@@ -15,7 +15,7 @@
                 <div class="me-auto">
                     <a class="btn-icon btn-sm bi bi-file-earmark-plus" href="{{ route('reqticket') }}" title="Tambah ticket">Tambah ticket</a>
                 </div>
-                <form class="search-box" method="get" action="/tickets">
+                <form class="search-box" method="get" action="/ticket">
                     <div class="input-group">
                         <input type="text" class="form-control" name="q" placeholder="Search...">
                         <div class="input-group-append">
@@ -32,6 +32,7 @@
                             <th scope="col">Bagian / Unit</th>
                             <th scope="col">Deskripsi</th>
 			                <th scope="col">PIC</th>
+                            <th scope="col">Petugas</th>
                             <th scope="col">Status</th>
                             <th scope="col" colspan="2">Action</th>
                         </tr>
@@ -43,9 +44,10 @@
                                 <td>{{ $obj->cnmunit }}</td>
                                 <td>{{ $obj->description }}</td>
       				            <td>{{ $obj->pic }}</td>
+                                <td>{{ $obj->petugas ?? mb_convert_encoding('&#10005;', 'UTF-8', 'HTML-ENTITIES') }}</td>
                                 @if($obj->status_name ==  'Open')
                                     <td style="width: 0.1rem;"><span class="badge bg-danger">{{ $obj->status_name }}</span></td>
-                                    <td  style="width: 0.1rem;"><button class="btn btn-lg btn-image btn-take" name="{{ $obj->id }}" onclick="confirm_take(this.name);"></button></td>
+                                    <td  style="width: 0.1rem;"><button class="btn btn-lg btn-image btn-take" name="{{ $obj->id }}" onclick="window.location='/setpetugas/{{ $obj->id }}'"></button></td>
                                 @elseif($obj->status_name ==  'On-Process')
                                     <td style="width: 0.1rem;"><span class="badge bg-warning">{{ $obj->status_name }}</span></td>
                                     <td style="width: 0.1rem;"><button class="btn btn-lg btn-image btn-done" name="{{ $obj->id }}" onclick="window.location='/finish/{{ $obj->id }}'"></button></td>
@@ -61,12 +63,13 @@
             <div class="d-flex justify-content-end">
                 {{$ticket->withQueryString()->links()}}
             </div>
+            <!-- The Modal -->
         </div>
     </div>
 </div>
 <script>
 function confirm_take(id) {
-    if(confirm('Apa kamu yakin ingin mengambil ticket ini ?')){
+   /*  if(confirm('Apa kamu yakin ingin mengambil ticket ini ?')){
     fetch("{{ route('taketicket') }}", {
         headers: {
             'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -78,7 +81,7 @@ function confirm_take(id) {
     })
     .then(res => res.text()) // or res.json()
     .then(res => location.reload(true))
-    }
+    } */
 }
 function confirm_done(id) {
     if(confirm('Apa kamu yakin ingin menyelesaikan ticket ini ?')){

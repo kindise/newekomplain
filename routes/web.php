@@ -25,4 +25,5 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/finish/{id}', [App\Http\Controllers\TicketController::class, 'finish']);
     Route::post('/done', [App\Http\Controllers\TicketController::class, 'doneticket'])->name('doneticket');
     Route::get('/detail/{id}', [App\Http\Controllers\TicketController::class, 'detail'])->name('detail');
+    Route::get('/setpetugas/{id}', [App\Http\Controllers\TicketController::class, 'setpetugas'])->name('setpetugas');
 });

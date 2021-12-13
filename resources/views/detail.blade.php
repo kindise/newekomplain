@@ -29,7 +29,7 @@
                             <td style="vertical-align: top;">{{ $tglselesai ?? '-' }}
                         </tr>
                         <tr>
-                            <td style="vertical-align: top;">Waktu Selesai</td>
+                            <td style="vertical-align: top;">Durasi Selesai</td>
                             <td style="vertical-align: top;">:</td>
                             <td style="vertical-align: top;">{{ $totaldurasi ?? '-' }}</td>
                         </tr>

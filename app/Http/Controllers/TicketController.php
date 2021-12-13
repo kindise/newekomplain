@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use App\Models\Unit;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -15,9 +16,11 @@ class TicketController extends Controller
 {
     public function index(Request $request)
     {
-        $data = collect(DB::table('ticket_status as t')
+        DB::enableQueryLog();
+        if(Auth::user()->id == 2){
+            $data = collect(DB::table('ticket_status as t')
                     ->select(DB::raw('t.ticket_id as id, t.status_date, 
-                    v.nama, w.cnmunit, v.description, u.status_name, v.pic'))
+                    v.nama, w.cnmunit, v.description, u.status_name, v.pic, p.name as petugas'))
                     ->join(DB::raw('(select id, ticket_id, max(status_date) as MaxDate 
                     from ticket_status group by ticket_id) tm'), 
                         function($join)
@@ -28,14 +31,48 @@ class TicketController extends Controller
                     ->join('statuses as u', 't.status_id', '=', 'u.id')
                     ->join('tickets as v', 't.ticket_id', '=', 'v.id')
                     ->join('msunit as w', 'v.ckdunit', '=', 'w.ckdunit')
-->orWhere('t.status_date', 'like', "%{$request->q}%")
-                    ->orWhere('v.nama', 'like', "%{$request->q}%")
-                    ->orWhere('w.cnmunit', 'like', "%{$request->q}%")
-                    ->orWhere('v.description', 'like', "%{$request->q}%")
-                    ->orWhere('u.status_name', 'like', "%{$request->q}%")
-                    ->orWhere('v.pic', 'like', "%{$request->q}%")
+                    ->leftjoin('users as p', 'v.assignto', '=', 'p.id')
+                    ->where(function ($q) use ($request){
+                        $q->where('t.status_date', 'like', "%{$request->q}%")
+                        ->orWhere('t.status_date', 'like', "%{$request->q}%")
+                        ->orWhere('v.nama', 'like', "%{$request->q}%")
+                        ->orWhere('w.cnmunit', 'like', "%{$request->q}%")
+                        ->orWhere('v.description', 'like', "%{$request->q}%")
+                        ->orWhere('u.status_name', 'like', "%{$request->q}%")
+                        ->orWhere('v.pic', 'like', "%{$request->q}%");
+                    })
                     ->orderBy('v.created_at', 'desc')
                     ->get());
+        }else{
+            $data = collect(DB::table('ticket_status as t')
+                    ->select(DB::raw('t.ticket_id as id, t.status_date, 
+                    v.nama, w.cnmunit, v.description, u.status_name, v.pic, p.name as petugas'))
+                    ->join(DB::raw('(select id, ticket_id, max(status_date) as MaxDate 
+                    from ticket_status group by ticket_id) tm'), 
+                        function($join)
+                        {
+                            $join->on('t.ticket_id', '=', 'tm.ticket_id')
+                                 ->on('t.status_date', '=', 'tm.MaxDate');
+                        })
+                    ->join('statuses as u', 't.status_id', '=', 'u.id')
+                    ->join('tickets as v', 't.ticket_id', '=', 'v.id')
+                    ->join('msunit as w', 'v.ckdunit', '=', 'w.ckdunit')
+                    ->join('users as p', 'v.assignto', '=', 'p.id')
+                    ->where('v.assignto', Auth::user()->id)
+                    ->where(function ($q) use ($request){
+                        $q->where('t.status_date', 'like', "%{$request->q}%")
+                        ->orWhere('t.status_date', 'like', "%{$request->q}%")
+                        ->orWhere('v.nama', 'like', "%{$request->q}%")
+                        ->orWhere('w.cnmunit', 'like', "%{$request->q}%")
+                        ->orWhere('v.description', 'like', "%{$request->q}%")
+                        ->orWhere('u.status_name', 'like', "%{$request->q}%")
+                        ->orWhere('v.pic', 'like', "%{$request->q}%");
+                    })
+                    ->orderBy('v.created_at', 'desc')
+                    ->get());
+            
+        }
+        
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $currentResults = $data->slice(($currentPage - 1) * 10,10)->all();
         $ticket = new LengthAwarePaginator($currentResults, $data->count(), 10);
@@ -87,7 +124,13 @@ class TicketController extends Controller
 
     public function taketicket(Request $request)
     {
+        $request->validate([
+            'petugas' => 'required',  
+        ]);
+
+
         $ticket = Ticket::where('id', $request->id)->update([
+            'assignto' => $request->petugas,
             'updated_at' => Carbon::now()
         ]);
 
@@ -101,7 +144,9 @@ class TicketController extends Controller
             ]);
         }
 
-        return 'ok';
+        $user = User::where('id', $request->petugas)->first();
+
+        return redirect('/ticket')->with('success', 'Ticket berhasil diambil oleh '. $user->name);
     }
 
     public function finish($id)
@@ -164,5 +209,11 @@ class TicketController extends Controller
         }
 
         return view('detail', compact('id', 'detail', 'data', 'tglreq'));
+    }
+
+    public function setpetugas($id)
+    {
+        $petugas = User::select('id', 'name')->get();
+        return view('setpetugas', compact('id', 'petugas'));
     }
 }
