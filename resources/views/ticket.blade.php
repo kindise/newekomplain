@@ -30,6 +30,7 @@
                         <tr>
                             <th scope="col">Nama Pengkomplain</th>
                             <th scope="col">Bagian / Unit</th>
+                            <th scope="col">Tanggal</th>
                             <th scope="col">Deskripsi</th>
 			                <th scope="col">PIC</th>
                             <th scope="col">Petugas</th>
@@ -42,6 +43,7 @@
                             <tr>
                                 <th scope="row">{{ $obj->nama }}</th>
                                 <td>{{ $obj->cnmunit }}</td>
+                                <td>{{ date('d-M-y H:i:s', strtotime($obj->created_at)) }}</td>
                                 <td>{{ $obj->description }}</td>
       				            <td>{{ $obj->pic }}</td>
                                 <td>{{ $obj->petugas ?? mb_convert_encoding('&#10005;', 'UTF-8', 'HTML-ENTITIES') }}</td>

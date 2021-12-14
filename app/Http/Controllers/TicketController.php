@@ -20,7 +20,7 @@ class TicketController extends Controller
         if(Auth::user()->id == 2){
             $data = collect(DB::table('ticket_status as t')
                     ->select(DB::raw('t.ticket_id as id, t.status_date, 
-                    v.nama, w.cnmunit, v.description, u.status_name, v.pic, p.name as petugas'))
+                    v.nama, w.cnmunit, v.description, v.created_at, u.status_name, v.pic, p.name as petugas'))
                     ->join(DB::raw('(select id, ticket_id, max(status_date) as MaxDate 
                     from ticket_status group by ticket_id) tm'), 
                         function($join)
@@ -203,7 +203,8 @@ class TicketController extends Controller
             $tglselesai = Carbon::parse($tglresolve)->isoFormat('dddd, D MMMM Y HH:mm:ss');
 
             $newDate = Carbon::createFromFormat('Y-m-d H:i:s', $tglresolve) ;
-            $result = Carbon::createFromFormat('Y-m-d H:i:s', $data->created_at)->diffForHumans($newDate);
+            //$result = Carbon::createFromFormat('Y-m-d H:i:s', $data->created_at)->diffForHumans($newDate);
+            $result = $newDate->diff($data->created_at)->format('%H:%I:%S');
             $totaldurasi = $result;
             return view('detail', compact('id', 'detail', 'data', 'tglreq', 'tglselesai', 'totaldurasi'));
         }
