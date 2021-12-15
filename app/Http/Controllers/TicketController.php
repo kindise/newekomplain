@@ -46,7 +46,7 @@ class TicketController extends Controller
         }else{
             $data = collect(DB::table('ticket_status as t')
                     ->select(DB::raw('t.ticket_id as id, t.status_date, 
-                    v.nama, w.cnmunit, v.description, u.status_name, v.pic, p.name as petugas'))
+                    v.nama, w.cnmunit, v.description, v.created_at, u.status_name, v.pic, p.name as petugas'))
                     ->join(DB::raw('(select id, ticket_id, max(status_date) as MaxDate 
                     from ticket_status group by ticket_id) tm'), 
                         function($join)
@@ -187,8 +187,9 @@ class TicketController extends Controller
         ->get());
 
         $data = collect(DB::table('tickets as a')
-                ->select(DB::raw('a.nama, b.cnmunit, a.description, a.solution, a.pic, a.created_at'))
+                ->select(DB::raw('a.nama, b.cnmunit, a.description, a.solution, a.pic, p.name as petugas, a.created_at'))
                 ->join('msunit as b', 'a.ckdunit', '=', 'b.ckdunit')
+                ->join('users as p', 'a.assignto', '=', 'p.id')
                 ->where('a.id', $id)
                 ->get())->first();
         
@@ -216,5 +217,10 @@ class TicketController extends Controller
     {
         $petugas = User::select('id', 'name')->get();
         return view('setpetugas', compact('id', 'petugas'));
+    }
+
+    public function tes(Request $request)
+    {
+        dd($request->all());
     }
 }

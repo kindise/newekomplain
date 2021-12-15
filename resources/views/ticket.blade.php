@@ -47,17 +47,23 @@
                                 <td>{{ $obj->description }}</td>
       				            <td>{{ $obj->pic }}</td>
                                 <td>{{ $obj->petugas ?? mb_convert_encoding('&#10005;', 'UTF-8', 'HTML-ENTITIES') }}</td>
-                                @if($obj->status_name ==  'Open')
-                                    <td style="width: 0.1rem;"><span class="badge bg-danger">{{ $obj->status_name }}</span></td>
-                                    <td  style="width: 0.1rem;"><button class="btn btn-lg btn-image btn-take" name="{{ $obj->id }}" onclick="window.location='/setpetugas/{{ $obj->id }}'"></button></td>
-                                @elseif($obj->status_name ==  'On-Process')
-                                    <td style="width: 0.1rem;"><span class="badge bg-warning">{{ $obj->status_name }}</span></td>
-                                    <td style="width: 0.1rem;"><button class="btn btn-lg btn-image btn-done" name="{{ $obj->id }}" onclick="window.location='/finish/{{ $obj->id }}'"></button></td>
-                                @else
-                                    <td style="width: 0.1rem;"><span class="badge bg-success">{{ $obj->status_name }}</span></td>
-                                @endif
-                                <td style="width: 0.1rem;"><button class="btn btn-lg btn-image btn-detail" onclick="window.location='{{ route("detail", $obj->id) }}'"></button></td>
-                            </tr>
+                                <td style="width: 0.1rem;"><span class="badge {{ ($obj->status_name ==  'Open' ? 'bg-danger' : ($obj->status_name ==  'On-Process' ? 'bg-warning' : 'bg-success') )}} ">{{ $obj->status_name }}</span></td>
+                                <td>
+                                    <div class="dropdown">
+                                        <a class="btn btn-outline-primary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Action
+                                        </a>
+
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            @if($obj->status_name ==  'Open')
+                                                <li><a class="dropdown-item" href="/setpetugas/{{ $obj->id }}">Proses ticket</a></li>
+                                            @elseif($obj->status_name ==  'On-Process')
+                                                <li><a class="dropdown-item" href="/finish/{{ $obj->id }}'">Selesaikan ticket</a></li>
+                                            @endif
+                                            <li><a class="dropdown-item" href="{{ route('detail', $obj->id) }}">Detail</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
                         @endforeach
                     </tbody>
                 </table>

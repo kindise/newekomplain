@@ -33,10 +33,15 @@
                             <td style="vertical-align: top;">:</td>
                             <td style="vertical-align: top;">{{ $totaldurasi ?? '-' }}</td>
                         </tr>
-			<tr>
+			            <tr>
                             <td style="vertical-align: top;">PIC</td>
                             <td style="vertical-align: top;">:</td>
                             <td style="vertical-align: top;">{{ $data->pic ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: top;">Petugas</td>
+                            <td style="vertical-align: top;">:</td>
+                            <td style="vertical-align: top;">{{ $data->petugas ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td style="vertical-align: top;">Solusi</td>
