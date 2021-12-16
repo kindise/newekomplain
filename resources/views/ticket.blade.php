@@ -60,7 +60,9 @@
                                             @elseif($obj->status_name ==  'On-Process')
                                                 <li><a class="dropdown-item" href="/finish/{{ $obj->id }}'">Selesaikan ticket</a></li>
                                             @endif
-                                            <li><a class="dropdown-item" href="{{ route('detail', $obj->id) }}">Detail</a></li>
+                                            @if($obj->status_name !=  'Open')
+                                                <li><a class="dropdown-item" href="{{ route('detail', $obj->id) }}">Detail</a></li>
+                                            @endif
                                         </ul>
                                     </div>
                                 </td>
