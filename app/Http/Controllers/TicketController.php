@@ -19,10 +19,10 @@ class TicketController extends Controller
         DB::enableQueryLog();
         if(Auth::user()->id == 2){
             $data = collect(DB::table('ticket_status as t')
-                    ->select(DB::raw('t.ticket_id as id, t.status_date, 
+                    ->select(DB::raw('t.ticket_id as id, t.status_date,
                     v.nama, w.cnmunit, v.description, v.created_at, u.status_name, v.pic, p.name as petugas'))
-                    ->join(DB::raw('(select id, ticket_id, max(status_date) as MaxDate 
-                    from ticket_status group by ticket_id) tm'), 
+                    ->join(DB::raw('(select id, ticket_id, max(status_date) as MaxDate
+                    from ticket_status group by ticket_id) tm'),
                         function($join)
                         {
                             $join->on('t.ticket_id', '=', 'tm.ticket_id')
@@ -45,10 +45,10 @@ class TicketController extends Controller
                     ->get());
         }else{
             $data = collect(DB::table('ticket_status as t')
-                    ->select(DB::raw('t.ticket_id as id, t.status_date, 
+                    ->select(DB::raw('t.ticket_id as id, t.status_date,
                     v.nama, w.cnmunit, v.description, v.created_at, u.status_name, v.pic, p.name as petugas'))
-                    ->join(DB::raw('(select id, ticket_id, max(status_date) as MaxDate 
-                    from ticket_status group by ticket_id) tm'), 
+                    ->join(DB::raw('(select id, ticket_id, max(status_date) as MaxDate
+                    from ticket_status group by ticket_id) tm'),
                         function($join)
                         {
                             $join->on('t.ticket_id', '=', 'tm.ticket_id')
@@ -70,9 +70,9 @@ class TicketController extends Controller
                     })
                     ->orderBy('v.created_at', 'desc')
                     ->get());
-            
+
         }
-		
+
 		//dd(DB::getQueryLog());
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $currentResults = $data->slice(($currentPage - 1) * 10,10)->all();
@@ -94,7 +94,7 @@ class TicketController extends Controller
             'unit' => 'required',
             'deskripsi' => 'required',
         ]);
-        
+
         DB::beginTransaction();
         try{
             $ticket = new Ticket();
@@ -102,7 +102,7 @@ class TicketController extends Controller
             $ticket->ckdunit = $request->unit;
             $ticket->description = $request->deskripsi;
             //Auth::user()->name
-            $ticket->pic = 'SIMRS Pasar Rebo' ;     
+            $ticket->pic = 'SIMRS Pasar Rebo' ;
             $ticket->save();
 
             if ($ticket){
@@ -126,7 +126,7 @@ class TicketController extends Controller
     public function taketicket(Request $request)
     {
         $request->validate([
-            'petugas' => 'required',  
+            'petugas' => 'required',
         ]);
 
 
@@ -175,7 +175,7 @@ class TicketController extends Controller
         }
 
         return redirect('/ticket')->with('success', 'Ticket status menjadi done');
-       
+
     }
 
     public function detail($id)
@@ -193,7 +193,7 @@ class TicketController extends Controller
 				->join('users as p', 'a.assignto', '=', 'p.id')
                 ->where('a.id', $id)
                 ->get())->first();
-        
+
         $tglreq = Carbon::parse($data->created_at)->isoFormat('dddd, D MMMM Y HH:mm:ss');
         $tglresolve = collect(DB::table('ticket_status')
                         ->select('status_date')
@@ -218,5 +218,10 @@ class TicketController extends Controller
     {
         $petugas = User::select('id', 'name')->get();
         return view('setpetugas', compact('id', 'petugas'));
+    }
+
+    public function tes(Request $request)
+    {
+        dd($request->all());
     }
 }
