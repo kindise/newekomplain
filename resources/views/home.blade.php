@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <form method="post" action="/tes" enctype="multipart/form-data">
+    {{-- <form method="post" action="/tes" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
             <textarea class="ckeditor form-control" name="editor1"></textarea>
@@ -18,11 +18,11 @@
                                 </button>
                             </div>
                         </div>
-    </form>
+    </form> --}}
 </div>
 @endsection
 @section('js')
-<script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
+{{-- <script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
 <script>
                         CKEDITOR.replace( 'editor1', {
                             toolbar:[
@@ -31,5 +31,5 @@
                                 { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
                             ]
                         } );
-                </script>
+                </script> --}}
 @endsection
