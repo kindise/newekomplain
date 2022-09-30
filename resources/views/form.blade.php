@@ -18,7 +18,7 @@
                     <form method="POST" action="{{ route('storeticket') }}">
                         @csrf
                         <div class="mb-3 row">
-                            <label for="nama" class="col-sm-4 col-form-label text-md-end">{{ __('Nama pengkomplain') }}</label>
+                            <label for="nama" class="col-sm-4 col-form-label text-md-end">{{ __('Nama pelapor') }}</label>
                             <div class="col-sm-6">
                                 <input id="nama" type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" value="{{ old('nama') }}{{ ($ticket->nama ?? '') }}" />
                                 @error('nama')

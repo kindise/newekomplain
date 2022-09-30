@@ -28,10 +28,11 @@
                 <table class="table table-borderless" id="dataTable">
                     <thead class="thead-biru">
                         <tr>
-                            <th scope="col">Nama Pengkomplain</th>
+                            <th scope="col">Nama Pelapor</th>
                             <th scope="col">Bagian / Unit</th>
+							<th scope="col">Tanggal Mulai</th>
                             <th scope="col">Deskripsi</th>
-			                <th scope="col">PIC</th>
+			                <th scope="col">Tanggal Selesai</th>
                             <th scope="col">Petugas</th>
                             <th scope="col">Status</th>
                             <th scope="col" colspan="2">Action</th>
@@ -42,19 +43,29 @@
                             <tr>
                                 <th scope="row">{{ $obj->nama }}</th>
                                 <td>{{ $obj->cnmunit }}</td>
+								<td>{{ date('d-M-y H:i:s', strtotime($obj->created_at)) }}</td>
                                 <td>{{ $obj->description }}</td>
-      				            <td>{{ $obj->pic }}</td>
+      				            <td>{{ ($obj->status_name ==  'Done' ? date('d-M-y H:i:s', strtotime($obj->status_date)) : mb_convert_encoding('&#10005;', 'UTF-8', 'HTML-ENTITIES') ) }}</td>
                                 <td>{{ $obj->petugas ?? mb_convert_encoding('&#10005;', 'UTF-8', 'HTML-ENTITIES') }}</td>
-                                @if($obj->status_name ==  'Open')
-                                    <td style="width: 0.1rem;"><span class="badge bg-danger">{{ $obj->status_name }}</span></td>
-                                    <td  style="width: 0.1rem;"><button class="btn btn-lg btn-image btn-take" name="{{ $obj->id }}" onclick="window.location='/setpetugas/{{ $obj->id }}'"></button></td>
-                                @elseif($obj->status_name ==  'On-Process')
-                                    <td style="width: 0.1rem;"><span class="badge bg-warning">{{ $obj->status_name }}</span></td>
-                                    <td style="width: 0.1rem;"><button class="btn btn-lg btn-image btn-done" name="{{ $obj->id }}" onclick="window.location='/finish/{{ $obj->id }}'"></button></td>
-                                @else
-                                    <td style="width: 0.1rem;"><span class="badge bg-success">{{ $obj->status_name }}</span></td>
-                                @endif
-                                <td style="width: 0.1rem;"><button class="btn btn-lg btn-image btn-detail" onclick="window.location='{{ route("detail", $obj->id) }}'"></button></td>
+								<td style="width: 0.1rem;"><span class="badge {{ ($obj->status_name ==  'Open' ? 'bg-danger' : ($obj->status_name ==  'On-Process' ? 'bg-warning' : 'bg-success') )}} ">{{ $obj->status_name }}</span></td>
+                                <td>
+                                    <div class="dropdown">
+                                        <a class="btn btn-outline-primary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Action
+                                        </a>
+
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            @if($obj->status_name ==  'Open')
+                                                <li><a class="dropdown-item" href="/setpetugas/{{ $obj->id }}">Proses ticket</a></li>
+                                            @elseif($obj->status_name ==  'On-Process')
+                                                <li><a class="dropdown-item" href="/finish/{{ $obj->id }}">Selesaikan ticket</a></li>
+                                            @endif
+											@if($obj->status_name !=  'Open')
+                                                <li><a class="dropdown-item" href="{{ route('detail', $obj->id) }}">Detail</a></li>
+                                            @endif
+                                        </ul>
+                                    </div>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

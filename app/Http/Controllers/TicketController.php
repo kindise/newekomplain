@@ -20,7 +20,7 @@ class TicketController extends Controller
         if(Auth::user()->id == 2){
             $data = collect(DB::table('ticket_status as t')
                     ->select(DB::raw('t.ticket_id as id, t.status_date, 
-                    v.nama, w.cnmunit, v.description, u.status_name, v.pic, p.name as petugas'))
+                    v.nama, w.cnmunit, v.description, v.created_at, u.status_name, v.pic, p.name as petugas'))
                     ->join(DB::raw('(select id, ticket_id, max(status_date) as MaxDate 
                     from ticket_status group by ticket_id) tm'), 
                         function($join)
@@ -46,7 +46,7 @@ class TicketController extends Controller
         }else{
             $data = collect(DB::table('ticket_status as t')
                     ->select(DB::raw('t.ticket_id as id, t.status_date, 
-                    v.nama, w.cnmunit, v.description, u.status_name, v.pic, p.name as petugas'))
+                    v.nama, w.cnmunit, v.description, v.created_at, u.status_name, v.pic, p.name as petugas'))
                     ->join(DB::raw('(select id, ticket_id, max(status_date) as MaxDate 
                     from ticket_status group by ticket_id) tm'), 
                         function($join)
@@ -72,7 +72,8 @@ class TicketController extends Controller
                     ->get());
             
         }
-        
+		
+		//dd(DB::getQueryLog());
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $currentResults = $data->slice(($currentPage - 1) * 10,10)->all();
         $ticket = new LengthAwarePaginator($currentResults, $data->count(), 10);
@@ -187,8 +188,9 @@ class TicketController extends Controller
         ->get());
 
         $data = collect(DB::table('tickets as a')
-                ->select(DB::raw('a.nama, b.cnmunit, a.description, a.solution, a.pic, a.created_at'))
+                ->select(DB::raw('a.nama, b.cnmunit, a.description, a.solution, a.pic, p.name as petugas, a.created_at'))
                 ->join('msunit as b', 'a.ckdunit', '=', 'b.ckdunit')
+				->join('users as p', 'a.assignto', '=', 'p.id')
                 ->where('a.id', $id)
                 ->get())->first();
         
@@ -203,7 +205,8 @@ class TicketController extends Controller
             $tglselesai = Carbon::parse($tglresolve)->isoFormat('dddd, D MMMM Y HH:mm:ss');
 
             $newDate = Carbon::createFromFormat('Y-m-d H:i:s', $tglresolve) ;
-            $result = Carbon::createFromFormat('Y-m-d H:i:s', $data->created_at)->diffForHumans($newDate);
+            //$result = Carbon::createFromFormat('Y-m-d H:i:s', $data->created_at)->diffForHumans($newDate);
+			$result = $newDate->diff($data->created_at)->format('%H:%I:%S');
             $totaldurasi = $result;
             return view('detail', compact('id', 'detail', 'data', 'tglreq', 'tglselesai', 'totaldurasi'));
         }
