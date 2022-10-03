@@ -248,4 +248,50 @@ class TicketController extends Controller
                 ->get());
         return $data;
     }
+
+    public function status_ticket(Request $request)
+    {
+        //switch case
+        $status = $request->status;
+        switch ($status) {
+            case '1':
+                $data = collect(DB::table('tickets as a')
+                ->select(DB::raw('a.id, a.nama, b.cnmunit, a.description, a.solution, a.pic, p.name as petugas, a.created_at'))
+                ->join('msunit as b', 'a.ckdunit', '=', 'b.ckdunit')
+                ->join('users as p', 'a.assignto', '=', 'p.id')
+                ->where('a.assignto', '=', null)
+                ->where('a.solution', '=', null)
+                ->get());
+                return $data;
+                break;
+            case '2':
+                $data = collect(DB::table('tickets as a')
+                ->select(DB::raw('a.id, a.nama, b.cnmunit, a.description, a.solution, a.pic, p.name as petugas, a.created_at'))
+                ->join('msunit as b', 'a.ckdunit', '=', 'b.ckdunit')
+                ->join('users as p', 'a.assignto', '=', 'p.id')
+                ->where('a.assignto', '!=', null)
+                ->where('a.solution', '=', null)
+                ->get());
+                return $data;
+                break;
+            case '3':
+                $data = collect(DB::table('tickets as a')
+                ->select(DB::raw('a.id, a.nama, b.cnmunit, a.description, a.solution, a.pic, p.name as petugas, a.created_at'))
+                ->join('msunit as b', 'a.ckdunit', '=', 'b.ckdunit')
+                ->join('users as p', 'a.assignto', '=', 'p.id')
+                ->where('a.solution', '!=', null)
+                ->get());
+                return $data;
+                break;
+            default:
+                $data = collect(DB::table('tickets as a')
+                ->select(DB::raw('a.id, a.nama, b.cnmunit, a.description, a.solution, a.pic, p.name as petugas, a.created_at'))
+                ->join('msunit as b', 'a.ckdunit', '=', 'b.ckdunit')
+                ->join('users as p', 'a.assignto', '=', 'p.id')
+                ->get());
+                return $data;
+                break;
+            }
+            
+    }
 }
