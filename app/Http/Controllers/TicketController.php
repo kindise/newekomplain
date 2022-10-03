@@ -224,4 +224,15 @@ class TicketController extends Controller
     {
         dd($request->all());
     }
+
+    public function queque (){
+        $data = collect(DB::table('tickets as a')
+                ->select(DB::raw('a.id, a.nama, b.cnmunit, a.description, a.solution, a.pic, p.name as petugas, a.created_at'))
+                ->join('msunit as b', 'a.ckdunit', '=', 'b.ckdunit')
+                ->join('users as p', 'a.assignto', '=', 'p.id')
+                ->where('a.assignto', '!=', null)
+                ->where('a.solution', '=', null)
+                ->get());
+        return $data;
+    }
 }
