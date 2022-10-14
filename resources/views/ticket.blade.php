@@ -59,6 +59,7 @@
                                                 <li><a class="dropdown-item" href="/setpetugas/{{ $obj->id }}">Proses ticket</a></li>
                                             @elseif($obj->status_name ==  'On-Process')
                                                 <li><a class="dropdown-item" href="/finish/{{ $obj->id }}">Selesaikan ticket</a></li>
+                                                <li><a class="dropdown-item" href="{{ route('detailprint', $obj->id) }}">Cetak ticket</a></li>
                                             @endif
 											@if($obj->status_name !=  'Open')
                                                 <li><a class="dropdown-item" href="{{ route('detail', $obj->id) }}">Detail</a></li>

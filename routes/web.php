@@ -27,6 +27,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/detail/{id}', [App\Http\Controllers\TicketController::class, 'detail'])->name('detail');
     Route::get('/setpetugas/{id}', [App\Http\Controllers\TicketController::class, 'setpetugas'])->name('setpetugas');
     Route::post('/tes', [App\Http\Controllers\TicketController::class, 'tes']);
+    Route::get('/detailprint/{id}', [App\Http\Controllers\TicketController::class, 'detailprint']);
 });
 
 Route::get('print', [App\Http\Controllers\HomeController::class, 'print'])->name('print');
