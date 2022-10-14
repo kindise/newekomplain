@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use App\Models\Unit;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -224,4 +225,33 @@ class TicketController extends Controller
     {
         dd($request->all());
     }
+
+    public function detailprint($id)
+    {
+            $sql = "SELECT
+            a.id,
+            A.created_at tgl_tiket, A.nama, B.cnmunit, A.description, A.solution, A.pic, C.name as assign,
+            (select D.updated_at from ticket_status D where A.id=D.ticket_id order by D.updated_at desc limit 1) as tgl_selesai
+            FROM tickets A
+            JOIN msunit B on A.ckdunit=B.ckdunit
+            JOIN users C on A.assignto=C.id
+            WHERE A.created_at BETWEEN '2022-06-01 00:00:00' AND '2022-09-30 23:59:59' and a.id = '$id'
+        ORDER BY A.created_at asc";
+
+        $data = DB::select($sql);
+
+        $pdf = Pdf::loadView('print', compact([
+            'data'
+        ]), [
+            'paper'         => 'A4',
+            'format'        => '0',
+            'margin_left'   => 10,
+            'margin_right'  => 10,
+            'margin_top'    => 10,
+            'margin_bottom' => 10,
+        ]);
+
+        return $pdf->stream('e_ticket_detail.pdf');
+    }
+
 }
