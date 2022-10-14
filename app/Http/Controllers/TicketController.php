@@ -235,7 +235,7 @@ class TicketController extends Controller
             FROM tickets A
             JOIN msunit B on A.ckdunit=B.ckdunit
             JOIN users C on A.assignto=C.id
-            WHERE A.created_at BETWEEN '2022-06-01 00:00:00' AND '2022-09-30 23:59:59' and a.id = '$id'
+            WHERE a.id = '$id'
         ORDER BY A.created_at asc";
 
         $data = DB::select($sql);
