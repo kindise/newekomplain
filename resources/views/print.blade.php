@@ -43,7 +43,7 @@
                 </tr>
                 <tr>
                     <td style="border-left: 1px solid;">TANGGAL / JAM SELESAI</td>
-                    <td style="border-right: 1px solid;" colspan="4">{{ date_format(date_create($item->tgl_selesai), 'Y-m-d / H:i') }}</td>
+                    <td style="border-right: 1px solid;" colspan="4">{{ empty($item->solution) ? '-' : date_format(date_create($item->tgl_selesai), 'Y-m-d / H:i') }}</td>
                 </tr>
                 <tr>
                     <td style="border-left: 1px solid;">PETUGAS</td>
@@ -51,7 +51,7 @@
                 </tr>
                 <tr>
                     <td style="border-left: 1px solid;">ISI PENYELESAIAN</td>
-                    <td style="border-right: 1px solid;" colspan="4">{{ $item->solution }}</td>
+                    <td style="border-right: 1px solid;" colspan="4">{{ $item->solution ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td style="border-left: 1px solid; border-right: 1px solid;" colspan="5">&nbsp;</td>
