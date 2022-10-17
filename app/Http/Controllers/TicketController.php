@@ -168,7 +168,7 @@ class TicketController extends Controller
         if($ticket){
             DB::table('ticket_status')->insert([
                 'ticket_id' => $request->ticketid,
-                'status_date' => Carbon::now(),
+                'status_date' => $request->tgl_selesai . ' ' . $request->jam_selesai,
                 'status_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -231,7 +231,7 @@ class TicketController extends Controller
             $sql = "SELECT
             a.id,
             A.created_at tgl_tiket, A.nama, B.cnmunit, A.description, A.solution, A.pic, C.name as assign,
-            (select D.updated_at from ticket_status D where A.id=D.ticket_id order by D.updated_at desc limit 1) as tgl_selesai
+            (select D.status_date from ticket_status D where A.id=D.ticket_id order by D.updated_at desc limit 1) as tgl_selesai
             FROM tickets A
             JOIN msunit B on A.ckdunit=B.ckdunit
             JOIN users C on A.assignto=C.id
