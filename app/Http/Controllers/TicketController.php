@@ -240,7 +240,7 @@ class TicketController extends Controller
 
         $data = DB::select($sql);
 
-        $pdf = Pdf::loadView('print', compact([
+        $pdf = Pdf::loadView('e_ticket_detail', compact([
             'data'
         ]), [
             'paper'         => 'A4',
