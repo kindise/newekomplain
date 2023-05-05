@@ -65,7 +65,7 @@
                 </tr>
             </table>
             @if ($loop->iteration % 2 == 0)
-                <div style="page-break-after: always"></div>
+                <div style="page-break-after: auto"></div>
             @endif
         @endforeach
     </body>

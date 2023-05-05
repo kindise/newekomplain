@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -27,9 +28,14 @@ class HomeController extends Controller
     {
         return view('home');
     }
-    
-    public function print()
+
+    public function print(Request $request)
     {
+        $tgl_awal = $request->input('tgl_awal');
+        $tgl_awal = Carbon::parse($tgl_awal)->format('Y-m-d');
+        $tgl_akhir = $request->input('tgl_akhir');
+        $tgl_akhir = Carbon::parse($tgl_akhir)->format('Y-m-d');
+
         // where between june and sept
         $sql = "SELECT
             a.id,
@@ -38,8 +44,8 @@ class HomeController extends Controller
             FROM tickets A
             JOIN msunit B on A.ckdunit=B.ckdunit
             JOIN users C on A.assignto=C.id
-            WHERE A.created_at BETWEEN '2022-06-01 00:00:00' AND '2022-09-30 23:59:59'
-        ORDER BY A.created_at asc";
+            WHERE A.created_at BETWEEN '". $tgl_awal ." 00:00:00' AND '". $tgl_akhir ." 23:59:59'
+        ORDER BY A.created_at asc limit 100";
 
         $data = DB::select($sql);
 
