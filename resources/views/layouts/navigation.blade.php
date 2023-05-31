@@ -24,6 +24,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/ticket">New Ticket</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('report') }}">Report</a>
+                </li>
                 @endif
             </ul>
 

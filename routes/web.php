@@ -28,6 +28,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/setpetugas/{id}', [App\Http\Controllers\TicketController::class, 'setpetugas'])->name('setpetugas');
     Route::post('/tes', [App\Http\Controllers\TicketController::class, 'tes']);
 	Route::get('/detailprint/{id}', [App\Http\Controllers\TicketController::class, 'detailprint'])->name('detailprint');
+
+    Route::group(['prefix' => 'report'], function() {
+        Route::get('/', [App\Http\Controllers\ReportController::class, 'index'])->name('report');
+        Route::post('/export', [App\Http\Controllers\ReportController::class, 'export'])->name('report.export');
+    });
 });
 
 Route::get('print', [App\Http\Controllers\HomeController::class, 'print'])->name('print');
