@@ -18,8 +18,7 @@ class TicketController extends Controller
     public function index(Request $request)
     {
         DB::enableQueryLog();
-        if(Auth::user()->id == 2){
-            $data = collect(DB::table('ticket_status as t')
+		 $data = collect(DB::table('ticket_status as t')
                     ->select(DB::raw('t.ticket_id as id, t.status_date,
                     v.nama, w.cnmunit, v.description, v.created_at, u.status_name, v.pic, p.name as petugas'))
                     ->join(DB::raw('(select id, ticket_id, max(status_date) as MaxDate
@@ -44,7 +43,10 @@ class TicketController extends Controller
                     })
                     ->orderBy('v.created_at', 'desc')
                     ->get());
-        }else{
+        /*if(Auth::user()->id == 2 || Auth::user()->id == 17){
+           
+        }*/
+		/*else{
             $data = collect(DB::table('ticket_status as t')
                     ->select(DB::raw('t.ticket_id as id, t.status_date,
                     v.nama, w.cnmunit, v.description, v.created_at, u.status_name, v.pic, p.name as petugas'))
@@ -72,7 +74,7 @@ class TicketController extends Controller
                     ->orderBy('v.created_at', 'desc')
                     ->get());
 
-        }
+        }*/
 
 		//dd(DB::getQueryLog());
         $currentPage = LengthAwarePaginator::resolveCurrentPage();

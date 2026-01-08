@@ -22,7 +22,10 @@
                     </div>
                 </li> -->
                 <li class="nav-item">
-                    <a class="nav-link" href="/ticket">New Ticket</a>
+                    <a class="nav-link {{ Request::is('ticket') ? 'active' : '' }}" href="/ticket">New Ticket</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ Request::is('report') ? 'active' : '' }}" href="{{ route('report') }}">Report</a>
                 </li>
                 @endif
             </ul>
