@@ -27,6 +27,9 @@
                 <li class="nav-item">
                     <a class="nav-link {{ Request::is('report') ? 'active' : '' }}" href="{{ route('report') }}">Report</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('report') }}">Report</a>
+                </li>
                 @endif
             </ul>
 
